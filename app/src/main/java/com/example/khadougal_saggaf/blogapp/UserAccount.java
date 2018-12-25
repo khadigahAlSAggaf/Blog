@@ -55,8 +55,9 @@ public class UserAccount extends AppCompatActivity {
     private Uri mainImageURI = null;
 
     private String userID;
-    EditText setup_Name;
-    Button setup_Button;
+    private EditText setup_Name;
+    private Button setup_Button;
+    private boolean isChange;
 
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
@@ -89,12 +90,14 @@ public class UserAccount extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final String user_name = setup_Name.getText().toString();
+                ProgressBar_setUp_profile.setVisibility(View.VISIBLE);
+
+                if(isChange){
                 if (!TextUtils.isEmpty(user_name) && mainImageURI != null) {
 
                     //to get cureent user data from database
                     userID = firebaseAuth.getCurrentUser().getUid();
 
-                    ProgressBar_setUp_profile.setVisibility(View.VISIBLE);
 
                     //in storage firebase create root called profile images , collect each user id + image
                     final StorageReference image_path = storageReference.child("profile_images").child(userID + ".jpg");
@@ -115,76 +118,95 @@ public class UserAccount extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
                             if (task.isSuccessful()) {
-                                Uri downloadUri = task.getResult();
-                                Map<String, String> userMap = new HashMap<>();
 
-                                //create values name , image inside users collection
-                                userMap.put("name", user_name);
-                                userMap.put("image", downloadUri.toString());
-
-                                firebaseFirestore.collection("Users").document(userID).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(UserAccount.this, "Account Setting is Updated", Toast.LENGTH_LONG).show();
-
-                                            startActivity(new Intent(UserAccount.this, MainActivity.class));
-                                            finish();
-
-                                        } else {
-                                            String errer = task.getException().getMessage();
-                                            Toast.makeText(UserAccount.this, errer + "****", Toast.LENGTH_LONG).show();
-
-                                        }
-                                    }
-                                });
-
-
-                                ProgressBar_setUp_profile.setVisibility(View.INVISIBLE);
-                                //Toast.makeText(UserAccount.this,"yesssss"+"****",Toast.LENGTH_LONG).show();
+                                storeFirestore(task, user_name);
 
                             } else {
                                 // Handle failures
                                 Toast.makeText(UserAccount.this, "noooo" + "****", Toast.LENGTH_LONG).show();
                                 ProgressBar_setUp_profile.setVisibility(View.INVISIBLE);
 
-
-                                // ...
                             }
                         }
                     });
+                }else{
+                    storeFirestore(null,user_name);
+                }
 
                 }
             }
+
+            private void storeFirestore(@NonNull Task<Uri>task,String user_name) {
+                Uri downloadUri;
+
+                if(task!=null) {
+                     downloadUri = task.getResult();
+                }else {
+                     downloadUri = mainImageURI;
+
+                }
+                Map<String, String> userMap = new HashMap<>();
+
+                //create values name , image inside users collection
+                userMap.put("name", user_name);
+                userMap.put("image", downloadUri.toString());
+
+                firebaseFirestore.collection("Users").document(userID).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(UserAccount.this, "Account Setting is Updated", Toast.LENGTH_LONG).show();
+
+                            startActivity(new Intent(UserAccount.this, MainActivity.class));
+                            finish();
+
+                        } else {
+                            String errer = task.getException().getMessage();
+                            Toast.makeText(UserAccount.this, errer + "****", Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                });
+
+
+                ProgressBar_setUp_profile.setVisibility(View.INVISIBLE);
+                //Toast.makeText(UserAccount.this,"yesssss"+"****",Toast.LENGTH_LONG).show();
+
+            }
         });
 
-        //to retrive the image and name and fixed them in page after added to firebase
+        ProgressBar_setUp_profile.setVisibility(View.VISIBLE);
+        setup_Button.setEnabled(false);
+        //to Rerive the image and name and fixed them in page after added to firebase
         firebaseFirestore.collection("Users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
                 if (task.isSuccessful()) {
 
                     if (task.getResult().exists()) {
                         String name = task.getResult().getString("name");
                         String image = task.getResult().getString("image");
-
-
-                        RequestOptions placeholderRequest = new RequestOptions();
-                        placeholderRequest.placeholder(R.drawable.profile);
-
+                        //to choose new image if click
+                        mainImageURI=Uri.EMPTY.parse(image);
+                        //to place the dummy image profile with the i,age that uploaded into firebase
+                        RequestOptions placeholderRequest = new RequestOptions(); //define [lace holder
+                        placeholderRequest.placeholder(R.drawable.profile);// link holder with dummy image profile
+                        //load image
                         Glide.with(UserAccount.this).setDefaultRequestOptions(placeholderRequest).load(image).into(setupProfileImage);
-                        Toast.makeText(UserAccount.this, "exsist) : ", Toast.LENGTH_LONG).show();
 
+                        //put the name from DB into it'is place
                         setup_Name.setText(name);
 
                     }
 
                 } else {
-
                     String error = task.getException().getMessage();
-                    Toast.makeText(UserAccount.this, "(FIRESTORE Retrieve Error) : " + error, Toast.LENGTH_LONG).show();
+                    Toast.makeText(UserAccount.this, "(Firestore Retrieve Error) : " + error, Toast.LENGTH_LONG).show();
                 }
+                ProgressBar_setUp_profile.setVisibility(View.INVISIBLE);
+                setup_Button.setEnabled(true);
+
+
 
             }
         });
@@ -229,6 +251,7 @@ public class UserAccount extends AppCompatActivity {
 
                 mainImageURI = result.getUri();
                 setupProfileImage.setImageURI(mainImageURI);
+                isChange=true;
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
