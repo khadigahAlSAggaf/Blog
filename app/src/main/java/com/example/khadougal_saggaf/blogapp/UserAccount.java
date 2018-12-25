@@ -50,8 +50,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class UserAccount extends AppCompatActivity {
-    Toolbar setUpToolBar;
-    CircleImageView setupProfileImage;
+    private Toolbar setUpToolBar;
+    private CircleImageView setupProfileImage;
     private Uri mainImageURI = null;
 
     private String userID;
@@ -85,64 +85,62 @@ public class UserAccount extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         userID = firebaseAuth.getCurrentUser().getUid();
 
-
         setup_Button.setOnClickListener(new View.OnClickListener() {
-            @Override
+
+     @Override
             public void onClick(View view) {
                 final String user_name = setup_Name.getText().toString();
                 ProgressBar_setUp_profile.setVisibility(View.VISIBLE);
 
-                if(isChange){
-                if (!TextUtils.isEmpty(user_name) && mainImageURI != null) {
+                if (isChange) {
+                    if (!TextUtils.isEmpty(user_name) && mainImageURI != null) {
 
-                    //to get cureent user data from database
-                    userID = firebaseAuth.getCurrentUser().getUid();
+                        //to get cureent user data from database
+                        userID = firebaseAuth.getCurrentUser().getUid();
 
 
-                    //in storage firebase create root called profile images , collect each user id + image
-                    final StorageReference image_path = storageReference.child("profile_images").child(userID + ".jpg");
+                        //in storage firebase create root called profile images , collect each user id + image
+                        final StorageReference image_path = storageReference.child("profile_images").child(userID + ".jpg");
 
-                    UploadTask uploadTask = image_path.putFile(mainImageURI);
+                        UploadTask uploadTask = image_path.putFile(mainImageURI);
 
-                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
+                        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+
+                                // Continue with the task to get the download URL
+                                return image_path.getDownloadUrl();
                             }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
 
-                            // Continue with the task to get the download URL
-                            return image_path.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
+                                    storeFirestore(task, user_name);
 
-                                storeFirestore(task, user_name);
-
-                            } else {
-                                // Handle failures
-                                Toast.makeText(UserAccount.this, "noooo" + "****", Toast.LENGTH_LONG).show();
-                                ProgressBar_setUp_profile.setVisibility(View.INVISIBLE);
-
+                                } else {
+                                    // Handle failures
+                                    Toast.makeText(UserAccount.this, "noooo" + "****", Toast.LENGTH_LONG).show();
+                                    ProgressBar_setUp_profile.setVisibility(View.INVISIBLE);
+                                }
                             }
-                        }
-                    });
-                }else{
-                    storeFirestore(null,user_name);
-                }
-
+                        });
+                    }
+                } else {
+                    storeFirestore(null, user_name);
                 }
             }
 
-            private void storeFirestore(@NonNull Task<Uri>task,String user_name) {
+            private void storeFirestore(@NonNull Task<Uri> task, String user_name) {
                 Uri downloadUri;
 
-                if(task!=null) {
-                     downloadUri = task.getResult();
-                }else {
-                     downloadUri = mainImageURI;
+                if (task != null) {
+                    downloadUri = task.getResult();
+                } else {
+                    downloadUri = mainImageURI;
 
                 }
                 Map<String, String> userMap = new HashMap<>();
@@ -187,7 +185,7 @@ public class UserAccount extends AppCompatActivity {
                         String name = task.getResult().getString("name");
                         String image = task.getResult().getString("image");
                         //to choose new image if click
-                        mainImageURI=Uri.EMPTY.parse(image);
+                        mainImageURI = Uri.EMPTY.parse(image);
                         //to place the dummy image profile with the i,age that uploaded into firebase
                         RequestOptions placeholderRequest = new RequestOptions(); //define [lace holder
                         placeholderRequest.placeholder(R.drawable.profile);// link holder with dummy image profile
@@ -205,7 +203,6 @@ public class UserAccount extends AppCompatActivity {
                 }
                 ProgressBar_setUp_profile.setVisibility(View.INVISIBLE);
                 setup_Button.setEnabled(true);
-
 
 
             }
@@ -251,7 +248,7 @@ public class UserAccount extends AppCompatActivity {
 
                 mainImageURI = result.getUri();
                 setupProfileImage.setImageURI(mainImageURI);
-                isChange=true;
+                isChange = true;
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
