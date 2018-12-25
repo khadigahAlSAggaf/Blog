@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">BlogApp</string>
+    <string name="logo">login page</string>
+    <string name="login_Email">Your Email</string>
+    <string name="login_Password">Password</string>
+    <string name="Log_Button">LOGIN TO ACCOUNT</string>
+    <string name="createaccount_Button">NEED A NEW ACCOUNT</string>
+    <string name="action_searchS">search</string>
+    <string name="Action_Settings">Setting</string>
+    <string name="Action_LogOut">LogOut</string>
+    <string name="Reg_Confirm_Password">Confirm Password</string>
+    <string name="Reg_already_account">Already Have Account!</string>
+    <string name="Reg_Create_Account">Create a New Account</string>
+    <string name="SetUpUser_Name">Your Name</string>
+    <string name="setUpAccount_Button">Save Account Setting</string>
+</resources>
