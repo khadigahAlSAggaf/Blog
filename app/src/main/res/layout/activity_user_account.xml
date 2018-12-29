@@ -62,6 +62,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userName" />
 
+
     <ProgressBar
         android:id="@+id/setUp_profile_ProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
