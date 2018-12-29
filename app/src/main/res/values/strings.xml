@@ -13,4 +13,6 @@
     <string name="Reg_Create_Account">Create a New Account</string>
     <string name="SetUpUser_Name">Your Name</string>
     <string name="setUpAccount_Button">Save Account Setting</string>
+    <string name="EditTExt_addPost_Description">Description.....</string>
+    <string name="newPostButton">Post Blog</string>
 </resources>
