@@ -64,7 +64,7 @@ public class newPostActivity extends AppCompatActivity {
 
         new_post_progressBar=findViewById(R.id.progressBar_new_post);
 
-        image_new_post=findViewById(R.id.image_new_post);
+        image_new_post=findViewById(R.id.new_post_image);
         editText_new_post_desc=findViewById(R.id.editText_newPost_desc);
         add_post_button=findViewById(R.id.button_addPost);
 
@@ -78,7 +78,7 @@ public class newPostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
-                        //.setAspectRatio(1,1)
+                        .setAspectRatio(1,1)
                         .setMinCropResultSize(512,512)
                         .start(newPostActivity.this);
             }
@@ -125,15 +125,12 @@ public class newPostActivity extends AppCompatActivity {
                         }
                     });
 
-
                 }
 
             }
         });
 
-
-
-    }
+    }//end onCreate
 
 
     /* storeFirestore store data into firestore database..
@@ -141,9 +138,8 @@ public class newPostActivity extends AppCompatActivity {
      * 1- Createing new collection -root- into fireStore DB
      * */
     private void storeFirestore(@NonNull Task<Uri> task, String newPost) {
+
         Uri downloadUri=task.getResult();
-
-
 
         Map<String, String> postMap = new HashMap<>();
         postMap.put("image_uri", downloadUri.toString());
@@ -155,8 +151,7 @@ public class newPostActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentReference> task) {
                 if(task.isSuccessful()){
-
-                    Toast.makeText(newPostActivity.this,"Post Sccssfful",Toast.LENGTH_LONG).show();
+                    Toast.makeText(newPostActivity.this,"Post Added Successfully",Toast.LENGTH_LONG).show();
                     startActivity(new Intent(newPostActivity.this,MainActivity.class));
 
                 }else{

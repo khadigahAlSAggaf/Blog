@@ -31,19 +31,18 @@
         android:maxLines="125"
         android:singleLine="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_new_post" />
+        app:layout_constraintTop_toBottomOf="@+id/new_post_image" />
 
     <Button
         android:id="@+id/button_addPost"
         android:layout_width="0dp"
         android:layout_height="36dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:background="@color/colorAccent"
         android:text="@string/newPostButton"
         android:textAllCaps="false"
@@ -53,25 +52,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_newPost_desc" />
 
+
+
     <ImageView
-        android:id="@+id/image_new_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/new_post_image"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newPost_toolBar"
         app:srcCompat="@drawable/avtarimage" />
 
+
     <ProgressBar
         android:id="@+id/progressBar_new_post"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:indeterminate="true"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/image_new_post"
-        tools:visibility="invisible" />
+        app:layout_constraintTop_toTopOf="@+id/new_post_image" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
