@@ -145,7 +145,7 @@ public class newPostActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Uri> task) {
                             if (task.isSuccessful()) {
 
-                                storeFirestore(task, newPost);
+                                storeFirestore(task, newPost); //task take the image task uploaded, newPost is the post written
 
                             } else {
                                 // Handle failures
@@ -217,7 +217,6 @@ public class newPostActivity extends AppCompatActivity {
             }
         }
     }
-
 
 
     /* CompressPhoto, compress the image resolution and quality..

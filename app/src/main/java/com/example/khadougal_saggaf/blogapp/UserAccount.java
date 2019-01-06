@@ -3,7 +3,6 @@ package com.example.khadougal_saggaf.blogapp;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 
 import android.os.Build;
@@ -29,16 +28,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -82,7 +77,7 @@ public class UserAccount extends AppCompatActivity {
         ProgressBar_setUp_profile = findViewById(R.id.setUp_profile_ProgressBar);
 
 
-        setupProfileImage = findViewById(R.id.setup_image);
+        setupProfileImage = findViewById(R.id.user_plog_image);
         setup_Name = findViewById(R.id.userName);
         setup_Button = findViewById(R.id.setup_button);
 
@@ -215,6 +210,7 @@ public class UserAccount extends AppCompatActivity {
         });
 
     }
+
 
     /* storeFirestore store data into firestore database..
      * after uploading image into storage now each data must store into backend database firestore..

@@ -12,10 +12,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,6 +29,14 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar mainToolBar;
     private FloatingActionButton addPost;
+    private BottomNavigationView Bottom_Main_Nav;
+
+    //Fragment
+    private FragmentHome fragmentHome;
+    private FragmentNotivication fragmentNotivication;
+    private FragmentAccount fragmentAccount;
+
+
     private String Current_userID;
 
     //firebase instance
@@ -43,9 +54,16 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mainToolBar);
         getSupportActionBar().setTitle("Photo Blog");
 
+        //Fragment Instance
+        fragmentHome = new FragmentHome();
+        fragmentAccount = new FragmentAccount();
+        fragmentNotivication = new FragmentNotivication();
+
         //Firebase Instance
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+
+        replaceFragment(fragmentHome);
 
         //onClick floatingPoint Button
         addPost = findViewById(R.id.floatingActionButton);
@@ -55,6 +73,32 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, newPostActivity.class));
             }
         });
+
+        Bottom_Main_Nav = findViewById(R.id.main_Button_Nav);
+        Bottom_Main_Nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_home:
+                        replaceFragment(fragmentHome);
+                        return true;
+
+                    case R.id.nav_notivication:
+                        replaceFragment(fragmentNotivication);
+                        return true;
+
+                    case R.id.nav_account:
+                        replaceFragment(fragmentAccount);
+                        return true;
+
+                    default:
+                        return false;
+                }
+
+            }
+        });
+
     }
 
 
@@ -129,5 +173,14 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
+    }
+
+
+    private void replaceFragment(Fragment fragment) {
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_container, fragment);
+        fragmentTransaction.commit();
+
     }
 }

@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"></androidx.appcompat.widget.Toolbar>
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/setup_image"
+        android:id="@+id/user_plog_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="8dp"
@@ -42,7 +42,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.518"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/setup_image" />
+        app:layout_constraintTop_toBottomOf="@+id/user_plog_image" />
 
     <Button
         android:id="@+id/setup_button"
