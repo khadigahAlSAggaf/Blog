@@ -249,6 +249,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             date.setText(plogDate);
 
         }
+        ///boioioi
 
         //like count
         private void likeCount(int countLike) {
