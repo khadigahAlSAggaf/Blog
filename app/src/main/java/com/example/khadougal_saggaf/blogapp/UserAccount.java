@@ -257,6 +257,7 @@ public class UserAccount extends AppCompatActivity {
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 //.setAspectRatio(1,1)
+
                 .start(UserAccount.this);
     }
 
