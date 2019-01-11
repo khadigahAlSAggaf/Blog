@@ -27,6 +27,8 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,13 +102,17 @@ public class FragmentHome extends Fragment {
                         lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
                     }
 
+                    if (e != null) {
+                        Log.d(TAG, "Error:" + e.getMessage());
+                    } else {
+
                     //for loop to check for document changes
                     for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
 
                         if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                            String BlogpostID=doc.getDocument().getId();
+                            String BlogpostID = doc.getDocument().getId();
                             BlogPost blogPostFromDB = doc.getDocument().toObject(BlogPost.class).withID(BlogpostID);
                             if (isFirstPageFirstLoad) {
 
@@ -120,6 +126,8 @@ public class FragmentHome extends Fragment {
                             blogRecyclerAdapter.notifyDataSetChanged(); //this to monitoring any change happen to list
                         }
                     }
+
+                }
                     isFirstPageFirstLoad = false;
                 }
 
@@ -139,6 +147,7 @@ public class FragmentHome extends Fragment {
 
         //snapshot help us to retrieve the data in realTime with order by last to old pots
         firstQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+
             @Override
             public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
 
@@ -161,6 +170,8 @@ public class FragmentHome extends Fragment {
                             blogRecyclerAdapter.notifyDataSetChanged(); //this to monitoring any change happen to list
                         }
                     }
+                }else{
+                    Log.d(TAG,"Error Message Found ****************:"+e.getMessage());
                 }
             }
 
