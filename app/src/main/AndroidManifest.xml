@@ -30,7 +30,11 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".newPostActivity"></activity>
+        <activity android:name=".newPostActivity" />
+        <activity
+            android:name=".commnts"
+            android:label="@string/title_activity_commnts"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
