@@ -29,7 +29,6 @@ import java.util.List;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -38,7 +37,6 @@ public class FragmentHome extends Fragment {
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth firebaseAuth;
     DocumentSnapshot lastVisible;
-
 
     private RecyclerView post_list_view;
     private List<BlogPost> blog_list;
@@ -106,28 +104,28 @@ public class FragmentHome extends Fragment {
                         Log.d(TAG, "Error:" + e.getMessage());
                     } else {
 
-                    //for loop to check for document changes
-                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                        //for loop to check for document changes
+                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
 
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                            String BlogpostID = doc.getDocument().getId();
-                            BlogPost blogPostFromDB = doc.getDocument().toObject(BlogPost.class).withID(BlogpostID);
-                            if (isFirstPageFirstLoad) {
+                                String BlogpostID = doc.getDocument().getId();
+                                BlogPost blogPostFromDB = doc.getDocument().toObject(BlogPost.class).withID(BlogpostID);
+                                if (isFirstPageFirstLoad) {
 
-                                blog_list.add(blogPostFromDB);
+                                    blog_list.add(blogPostFromDB);
 
-                            } else {
+                                } else {
 
-                                blog_list.add(0, blogPostFromDB);
+                                    blog_list.add(0, blogPostFromDB);
 
+                                }
+                                blogRecyclerAdapter.notifyDataSetChanged(); //this to monitoring any change happen to list
                             }
-                            blogRecyclerAdapter.notifyDataSetChanged(); //this to monitoring any change happen to list
                         }
-                    }
 
-                }
+                    }
                     isFirstPageFirstLoad = false;
                 }
 
@@ -155,14 +153,12 @@ public class FragmentHome extends Fragment {
                     // Get the last visible document
                     lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
-
                     //for loop to check for document changes
                     for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-
                         if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                            String BlogpostID=doc.getDocument().getId();
+                            String BlogpostID = doc.getDocument().getId();
 
                             BlogPost blogPostFromDB = doc.getDocument().toObject(BlogPost.class).withID(BlogpostID);
                             blog_list.add(blogPostFromDB);
@@ -170,9 +166,9 @@ public class FragmentHome extends Fragment {
                             blogRecyclerAdapter.notifyDataSetChanged(); //this to monitoring any change happen to list
                         }
                     }
-                }else{
-                    Log.d(TAG,"Error Message Found ****************:"+e.getMessage());
-                }
+                } //else {
+                  //  Log.d(TAG, "Error Message Found ****************:" + e.getMessage());
+                //}
             }
 
         });
