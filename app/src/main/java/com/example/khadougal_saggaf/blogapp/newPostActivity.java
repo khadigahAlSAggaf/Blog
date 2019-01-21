@@ -18,8 +18,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -34,14 +32,11 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.app.AppCompatActivity;
 
 import id.zelory.compressor.Compressor;
 
@@ -79,8 +74,8 @@ public class newPostActivity extends AppCompatActivity {
 
         new_post_progressBar = findViewById(R.id.progressBar_new_post);
 
-        image_new_post = findViewById(R.id.new_post_image);
-        editText_new_post_desc = findViewById(R.id.editText_newPost_desc);
+        image_new_post = findViewById(R.id.post_image_postView);
+        editText_new_post_desc = findViewById(R.id.post_postView);
         add_post_button = findViewById(R.id.button_addPost);
 
         firebaseAuth = FirebaseAuth.getInstance();

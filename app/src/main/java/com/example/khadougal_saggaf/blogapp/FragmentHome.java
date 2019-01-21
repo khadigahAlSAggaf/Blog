@@ -86,6 +86,7 @@ public class FragmentHome extends Fragment {
             });
 
 
+
             Query firstQuery = firebaseFirestore.collection("Posts").orderBy("timeStamp", Query.Direction.DESCENDING).limit(3);
 
             //snapshot help us to retrieve the data in realTime with order by last to old pots

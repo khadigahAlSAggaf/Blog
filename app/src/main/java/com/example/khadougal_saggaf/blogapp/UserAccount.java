@@ -77,7 +77,7 @@ public class UserAccount extends AppCompatActivity {
         ProgressBar_setUp_profile = findViewById(R.id.setUp_profile_ProgressBar);
 
 
-        setupProfileImage = findViewById(R.id.user_plog_image);
+        setupProfileImage = findViewById(R.id.postView_userImage);
         setup_Name = findViewById(R.id.userName);
         setup_Button = findViewById(R.id.setup_button);
 

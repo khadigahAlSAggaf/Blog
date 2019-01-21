@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"></androidx.appcompat.widget.Toolbar>
 
     <EditText
-        android:id="@+id/editText_newPost_desc"
+        android:id="@+id/post_postView"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -32,7 +32,7 @@
         android:singleLine="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_post_image" />
+        app:layout_constraintTop_toBottomOf="@+id/post_image_postView" />
 
     <Button
         android:id="@+id/button_addPost"
@@ -50,12 +50,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_newPost_desc" />
+        app:layout_constraintTop_toBottomOf="@+id/post_postView" />
 
 
 
     <ImageView
-        android:id="@+id/new_post_image"
+        android:id="@+id/post_image_postView"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
@@ -75,7 +75,7 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/new_post_image" />
+        app:layout_constraintTop_toTopOf="@+id/post_image_postView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,7 +8,7 @@
     tools:layout_editor_absoluteY="25dp">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/main_toolBar"
+        android:id="@+id/post_toolBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -45,7 +45,7 @@
         app:layout_constraintBottom_toTopOf="@+id/main_Button_Nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_toolBar">
+        app:layout_constraintTop_toBottomOf="@+id/post_toolBar">
 
     </FrameLayout>
 

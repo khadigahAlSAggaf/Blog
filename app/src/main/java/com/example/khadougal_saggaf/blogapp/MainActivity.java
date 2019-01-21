@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //ToolBar
-        mainToolBar = findViewById(R.id.main_toolBar);
+        mainToolBar = findViewById(R.id.post_toolBar);
         setSupportActionBar(mainToolBar);
         getSupportActionBar().setTitle("Photo Blog");
 

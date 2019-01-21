@@ -39,11 +39,11 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/plog_description"
+                app:layout_constraintTop_toBottomOf="@+id/postView_desc"
                 app:srcCompat="@drawable/ic_favorite_gray" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/user_plog_image"
+                android:id="@+id/postView_userImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -54,7 +54,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/plog_usernae"
+                android:id="@+id/username_postView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -62,7 +62,7 @@
                 android:layout_marginTop="16dp"
                 android:text="User Name"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/user_plog_image"
+                app:layout_constraintStart_toEndOf="@+id/postView_userImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -70,22 +70,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:text="Jan 20,2019"
-                app:layout_constraintStart_toStartOf="@+id/plog_usernae"
-                app:layout_constraintTop_toBottomOf="@+id/plog_usernae" />
+                app:layout_constraintStart_toStartOf="@+id/username_postView"
+                app:layout_constraintTop_toBottomOf="@+id/username_postView" />
 
             <ImageView
-                android:id="@+id/plog_image"
+                android:id="@+id/postView_image_post"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
                 android:layout_marginTop="16dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/user_plog_image"
+                app:layout_constraintTop_toBottomOf="@+id/postView_userImage"
                 app:srcCompat="@drawable/postlist" />
 
             <TextView
-                android:id="@+id/plog_description"
+                android:id="@+id/postView_desc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -99,7 +99,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/plog_image"
+                app:layout_constraintTop_toBottomOf="@+id/postView_image_post"
                 app:layout_constraintVertical_bias="0.238" />
 
             <TextView
@@ -113,7 +113,7 @@
                 android:text="0 Likes"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/blog_like"
-                app:layout_constraintTop_toBottomOf="@+id/plog_description" />
+                app:layout_constraintTop_toBottomOf="@+id/postView_desc" />
 
             <ImageView
                 android:id="@+id/blog_comment_icon"
@@ -123,7 +123,7 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/plog_description"
+                app:layout_constraintTop_toBottomOf="@+id/postView_desc"
                 app:srcCompat="@drawable/blog_comment_icon" />
 
             <TextView
@@ -137,7 +137,7 @@
                 android:text="TextView"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/blog_comment_icon"
-                app:layout_constraintTop_toBottomOf="@+id/plog_description" />
+                app:layout_constraintTop_toBottomOf="@+id/postView_desc" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

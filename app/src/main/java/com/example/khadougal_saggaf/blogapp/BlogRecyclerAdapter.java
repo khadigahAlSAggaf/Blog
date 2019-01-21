@@ -2,7 +2,6 @@ package com.example.khadougal_saggaf.blogapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +46,8 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
     private DocumentReference documentReference;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
+    //String postID;
+    //String currentUserID;
 
 
     public BlogRecyclerAdapter(List<BlogPost> blog_list) { //contractor
@@ -71,6 +72,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
     /* onBindViewHolder responsible for decide what appear post/image Post/image Account ..etc*/
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+
         final String postID = blog_list.get(position).BlogpostID;
         final String currentUserID = firebaseAuth.getCurrentUser().getUid();
 
@@ -83,7 +85,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         holder.setImage(image_uri);
 
         //String userID = blog_list.get(position).getUser_id();
-        String user_id = blog_list.get(position).getUser_id();
+        final String user_id = blog_list.get(position).getUser_id();
 
         if (firebaseAuth.getCurrentUser() != null) {
             firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -175,6 +177,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
                 }
             });
+
             //Like Feature
             holder.btn_blog_like.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -214,6 +217,22 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
                 }
             });
         }
+
+        //onClicked post
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "post ID:  " + postID, Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(context, PostPage.class);
+                intent.putExtra("post_id",postID);
+                intent.putExtra("user_id",user_id);
+
+                context.startActivity(intent);
+            }
+        });
+
+
     }
 
     @Override
@@ -244,30 +263,30 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
             btn_blog_like = mView.findViewById(R.id.blog_like);
             blogCommentBtn = mView.findViewById(R.id.blog_comment_icon);
+            //mView.setOnClickListener(this);
 
         }
 
         //retrieve post
         public void setDesc(String DescText) {
-            desc = mView.findViewById(R.id.plog_description);
+            desc = mView.findViewById(R.id.postView_desc);
             desc.setText(DescText);
         }
 
         //retrieve image using the uri downloader
         private void setImage(String downloaderUri) {
-            blogImageView = mView.findViewById(R.id.plog_image);
+            blogImageView = mView.findViewById(R.id.postView_image_post);
 
             //request optional to assign temporary image appear before while loading the image from db.
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.placeholder(R.drawable.postlist);
 
-
             Glide.with(context).applyDefaultRequestOptions(requestOptions).load(downloaderUri).into(blogImageView);
         }
 
         private void setupUser(String name, String image) {
-            userImage = mView.findViewById(R.id.user_plog_image);
-            userName = mView.findViewById(R.id.plog_usernae);
+            userImage = mView.findViewById(R.id.postView_userImage);
+            userName = mView.findViewById(R.id.username_postView);
 
             userName.setText(name);
 
@@ -285,7 +304,6 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             date.setText(plogDate);
 
         }
-        ///boioioi
 
         //like count
         private void likeCount(int countLike) {
@@ -293,10 +311,20 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             like_count.setText(countLike + " Likes");
         }
 
-
+        //Comment counter
         public void Countcomment(int count) {
-            countComments=mView.findViewById(R.id.count_commnts);
-            countComments.setText(count+"");
+            countComments = mView.findViewById(R.id.count_commnts);
+            countComments.setText(count + "");
         }
+
+
+        //@Override
+        /*public void onClick(View view) {
+            Toast.makeText(context,"here:  "+postID ,Toast.LENGTH_LONG).show();
+            //Intent intent = new Intent(context, UserAccount.class);
+            //intent.putExtra("postid",postID);
+            //context.startActivity(intent);
+        }
+        */
     }
 }
