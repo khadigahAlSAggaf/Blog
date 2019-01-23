@@ -5,13 +5,10 @@
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/home_black_24dp"
-        android:title="@string/bottom_home_text" />
-    <!--<item
+        android:title="" />
+    <item
         android:id="@+id/nav_notivication"
         android:icon="@drawable/notifications_black_24dp"
-        android:title="@string/bottom_notification_text" />-->
-    <item
-        android:id="@+id/nav_account"
-        android:icon="@drawable/person_black_24dp"
-        android:title="@string/bottom_account_text" />
+        android:title="" />
+
 </menu>

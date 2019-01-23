@@ -9,8 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,10 +23,20 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Nullable;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class PostPage extends AppCompatActivity {
 
@@ -37,8 +49,13 @@ public class PostPage extends AppCompatActivity {
     private CircleImageView profileImage;
     private ImageView postImage;
 
+    private ImageView btn_blog_like;
+    private ImageView comment;
+
 
     private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +75,21 @@ public class PostPage extends AppCompatActivity {
         profileImage = findViewById(R.id.postView_userImage);
         postImage = findViewById(R.id.postView_image_post);
 
+        btn_blog_like = findViewById(R.id.imageView);
+        comment=findViewById(R.id.imageView2);
 
+        //Intent Extras
         post_id = getIntent().getExtras().getString("post_id");
         user_id = getIntent().getExtras().getString("user_id");
 
+        //Firebase Instance
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
+        //Current User ID
+        final String currentUserID = firebaseAuth.getCurrentUser().getUid();
+
+        // Retrieve Data Post
         firebaseFirestore.collection("Posts").document(post_id).get().addOnCompleteListener(PostPage.this, new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -74,6 +100,7 @@ public class PostPage extends AppCompatActivity {
                     Date postData = task.getResult().getDate("timeStamp");
                     long dateNumber = postData.getTime();
                     String dateString = DateFormat.format("MM/dd/yyyy", new Date(dateNumber)).toString();
+                    //Toast.makeText(PostPage.this, postDescription, Toast.LENGTH_LONG).show();
 
                     post.setText(postDescription);
                     date.setText(dateString);
@@ -89,6 +116,7 @@ public class PostPage extends AppCompatActivity {
             }
         });
 
+        // Retrieve User Data
         firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(PostPage.this, new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(Task<DocumentSnapshot> task) {
@@ -111,6 +139,67 @@ public class PostPage extends AppCompatActivity {
                 }
             }
         });
+
+
+        //Get Like
+        firebaseFirestore.collection("Posts/" + post_id + "/Likes").document(currentUserID).addSnapshotListener(PostPage.this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot != null) {
+                    //Log.d(TAG, "Error:" + e.getMessage());
+
+                    if (documentSnapshot.exists()) {
+
+                        //holder.setLike();
+                        btn_blog_like.setImageResource(R.drawable.ic_favorite_red);
+
+                    } else {
+                        btn_blog_like.setImageResource(R.drawable.ic_favorite_gray);
+
+                    }
+                } else {
+                    Log.d(TAG, "Error:" + e.getMessage());
+                }
+
+            }
+        });
+
+        //Like Feature
+        btn_blog_like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                firebaseFirestore.collection("Posts/" + post_id + "/Likes").document(currentUserID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                        if (!task.getResult().exists()) {
+
+                            Map<String, Object> likesMap = new HashMap<>();
+                            likesMap.put("timeStamp", FieldValue.serverTimestamp());
+
+                            firebaseFirestore.collection("Posts/" + post_id + "/Likes").document(currentUserID).set(likesMap);
+
+                        } else {
+
+                            firebaseFirestore.collection("Posts/" + post_id + "/Likes").document(currentUserID).delete();
+
+                        }
+
+                    }
+                });
+            }
+        });
+
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent commentIntent = new Intent(PostPage.this, CommentsActivity.class);
+                commentIntent.putExtra("blog_post_id", post_id);
+                startActivity(commentIntent);
+            }
+        });
+
 
     } // END ON_CREATE
 
@@ -141,7 +230,7 @@ public class PostPage extends AppCompatActivity {
     }
 
     public void deletePost() {
-//deklee
+
         AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(PostPage.this);
 
         // Setting Dialog Title
@@ -155,26 +244,26 @@ public class PostPage extends AppCompatActivity {
 
         // Setting Positive "Yes" Btn
         alertDialog2.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Write your code here to execute after dialog
-                        firebaseFirestore.collection("Posts").document(post_id).delete();
+            public void onClick(DialogInterface dialog, int which) {
+                // Write your code here to execute after dialog
+                firebaseFirestore.collection("Posts").document(post_id).delete();
 
-                        Intent i=new Intent(PostPage.this,MainActivity.class);
-                        Toast.makeText(PostPage.this, "Post deleted", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(PostPage.this, MainActivity.class);
+                Toast.makeText(PostPage.this, "Post deleted", Toast.LENGTH_LONG).show();
 
-                        startActivity(i);
+                startActivity(i);
 
-                    }
-                });
+            }
+        });
 
         // Setting Negative "NO" Btn
         alertDialog2.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Write your code here to execute after dialog
-                        Toast.makeText(getApplicationContext(), "You clicked on NO", Toast.LENGTH_SHORT).show();
-                        dialog.cancel();
-                    }
-                });
+            public void onClick(DialogInterface dialog, int which) {
+                // Write your code here to execute after dialog
+                Toast.makeText(getApplicationContext(), "You clicked on NO", Toast.LENGTH_SHORT).show();
+                dialog.cancel();
+            }
+        });
 
         // Showing Alert Dialog
         alertDialog2.show();

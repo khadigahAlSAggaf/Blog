@@ -84,12 +84,16 @@ public class MainActivity extends AppCompatActivity {
                         replaceFragment(fragmentHome);
                         return true;
 
-                    case R.id.nav_notivication:
-                        replaceFragment(fragmentNotivication);
-                        return true;
+                    /*case R.id.nav_notivication:
+                        //replaceFragment(fragmentNotivication);
+                        startActivity(new Intent(MainActivity.this,otherPage.class));
+
+                        return true;*/
 
                     case R.id.nav_account:
-                        replaceFragment(fragmentAccount);
+                        //replaceFragment(fragmentAccount);
+                        startActivity(new Intent(MainActivity.this,otherPage.class));
+
                         return true;
 
                     default:
@@ -180,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.main_container, fragment);
+        //fragmentTransaction.commitAllowingStateLoss();
         fragmentTransaction.commit();
 
     }

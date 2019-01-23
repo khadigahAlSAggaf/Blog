@@ -79,13 +79,14 @@ public class FragmentHome extends Fragment {
 
                     if (reachedBottom) {
                         String desc = lastVisible.getString("desc");
-                        Toast.makeText(getContext(), "Reach Bottom.. " + desc, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), "Reach Bottom.. " + desc, Toast.LENGTH_LONG).show();
                         loadMorePage();
                     }
                 }
             });
 
 
+            //.orderBy("timeStamp", Query.Direction.DESCENDING).limit(3)
 
             Query firstQuery = firebaseFirestore.collection("Posts").orderBy("timeStamp", Query.Direction.DESCENDING).limit(3);
 

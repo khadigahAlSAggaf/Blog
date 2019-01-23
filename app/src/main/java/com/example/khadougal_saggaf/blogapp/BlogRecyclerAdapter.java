@@ -46,8 +46,6 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
     private DocumentReference documentReference;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    //String postID;
-    //String currentUserID;
 
 
     public BlogRecyclerAdapter(List<BlogPost> blog_list) { //contractor
@@ -225,8 +223,8 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
                 Toast.makeText(context, "post ID:  " + postID, Toast.LENGTH_LONG).show();
 
                 Intent intent = new Intent(context, PostPage.class);
-                intent.putExtra("post_id",postID);
-                intent.putExtra("user_id",user_id);
+                intent.putExtra("post_id", postID);
+                intent.putExtra("user_id", user_id);
 
                 context.startActivity(intent);
             }

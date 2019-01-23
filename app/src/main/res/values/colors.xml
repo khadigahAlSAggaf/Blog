@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2196f3</color>
+    <!--<color name="colorPrimary">#2196f3</color>
     <color name="colorPrimaryDark">#0069c0</color>
-    <color name="colorAccent">#f44336</color>
+    <color name="colorAccent">#f44336</color>-->
+
+    <color name="colorPrimary">#f48fb1</color>
+    <color name="colorPrimaryDark">#bf5f82</color>
+    <color name="colorPrimaryLight">#f8bbd0</color>
+    <color name="colorAccent">#FFD600</color>
+
     <color name="whiteTransparent">#80ffffff</color>
     <color name="white">#ffffff</color>
+    <color name="pinkish">#f48fb1</color>
+    <color name="yellow">#FFD600</color>
+    <color name="darkpink">#AD5E93</color>
+
+
+    <color name="pinkishb">#f48fb1</color>
+    <color name="pinkishorigen">#E7A6B3</color>
+
 
 </resources>

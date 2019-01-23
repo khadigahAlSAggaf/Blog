@@ -24,4 +24,9 @@
     <string name="title_activity_commnts">commnts</string>
     <string name="edit_icon">edit</string>
     <string name="delete_icon">delete</string>
+    <string name="Blog">Blog</string>
+    <string name="blog_text">You read a book! let’s discus …</string>
+    <string name="logIn">Log in</string>
+    <string name="login">Log in</string>
+    <string name="loginbtn">Log in</string>
 </resources>
