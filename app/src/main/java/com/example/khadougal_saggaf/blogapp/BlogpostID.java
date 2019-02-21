@@ -4,6 +4,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.annotations.NotNull;
 
 public class BlogpostID {
+
     @Exclude
     public String BlogpostID;
 

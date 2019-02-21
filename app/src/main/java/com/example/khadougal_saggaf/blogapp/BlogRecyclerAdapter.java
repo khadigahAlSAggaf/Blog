@@ -48,10 +48,11 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
     private FirebaseAuth firebaseAuth;
 
 
-    public BlogRecyclerAdapter(List<BlogPost> blog_list) { //contractor
+    //Contractor
+    public BlogRecyclerAdapter(List<BlogPost> blog_list) {
         this.blog_list = blog_list;
     }
-    //flowing method require for adapter
+    //Flowing method require for adapter
 
     @NonNull
     @Override
@@ -63,8 +64,8 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-
         return new ViewHolder(view);
+
     }
 
     /* onBindViewHolder responsible for decide what appear post/image Post/image Account ..etc*/
@@ -80,7 +81,11 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
         //retrieve image in list
         String image_uri = blog_list.get(position).getImage_uri();
-        holder.setImage(image_uri);
+        String thumbUri = blog_list.get(position).getImage_thumb(); //add
+
+        holder.setImage(image_uri, thumbUri); //add
+
+        //holder.setImage(image_uri);
 
         //String userID = blog_list.get(position).getUser_id();
         final String user_id = blog_list.get(position).getUser_id();
@@ -98,16 +103,19 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
                     } else {
 
-                        //Firebase Exception
+                        /* Firebase Exception */
                     }
                 }
             });
 
             //Time Feature***
-            long millisecond = blog_list.get(position).getTimeStamp().getTime();
-            String dateString = DateFormat.format("MM/dd/yyyy", new Date(millisecond)).toString();
+            if (blog_list.get(position).getTimeStamp() != null) {
 
-            holder.setTime(dateString);
+                long millisecond = blog_list.get(position).getTimeStamp().getTime();
+                String dateString = DateFormat.format("MM/dd/yyyy", new Date(millisecond)).toString();
+
+                holder.setTime(dateString);
+            }
 
             //Count Like
             firebaseFirestore.collection("Posts/" + postID + "/Likes").addSnapshotListener((MainActivity) context, new EventListener<QuerySnapshot>() {
@@ -116,17 +124,17 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
                     //if (documentReference != null) {
                     //Log.d(TAG, "Error:" + e.getMessage());
+                    if (queryDocumentSnapshots != null) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
 
-                    if (!queryDocumentSnapshots.isEmpty()) {
+                            int count = queryDocumentSnapshots.size();
+                            holder.likeCount(count);
 
-                        int count = queryDocumentSnapshots.size();
-                        holder.likeCount(count);
+                        } else {
+                            holder.likeCount(0);
 
-                    } else {
-                        holder.likeCount(0);
-
+                        }
                     }
-                    //}
 
                 }
             });
@@ -138,17 +146,17 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
                     //if (documentReference != null) {
                     //Log.d(TAG, "Error:" + e.getMessage());
+                    if (queryDocumentSnapshots != null) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
 
-                    if (!queryDocumentSnapshots.isEmpty()) {
+                            int count = queryDocumentSnapshots.size();
+                            holder.Countcomment(count);
 
-                        int count = queryDocumentSnapshots.size();
-                        holder.Countcomment(count);
+                        } else {
+                            holder.Countcomment(0);
 
-                    } else {
-                        holder.Countcomment(0);
-
+                        }
                     }
-                    //}
 
                 }
             });
@@ -259,27 +267,38 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             super(itemView);
             mView = itemView;
 
+            //This views holds on activity - have actions -
             btn_blog_like = mView.findViewById(R.id.blog_like);
             blogCommentBtn = mView.findViewById(R.id.blog_comment_icon);
-            //mView.setOnClickListener(this);
 
         }
 
         //retrieve post
         public void setDesc(String DescText) {
             desc = mView.findViewById(R.id.postView_desc);
-            desc.setText(DescText);
+
+            if (DescText.length() > 200) {
+                String subDescription = DescText.substring(0, 200);
+                desc.setText(subDescription + "..........");
+
+            } else {
+                desc.setText(DescText);
+            }
         }
 
         //retrieve image using the uri downloader
-        private void setImage(String downloaderUri) {
+        private void setImage(String downloaderUri, String thubo) {
             blogImageView = mView.findViewById(R.id.postView_image_post);
 
             //request optional to assign temporary image appear before while loading the image from db.
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.placeholder(R.drawable.postlist);
 
-            Glide.with(context).applyDefaultRequestOptions(requestOptions).load(downloaderUri).into(blogImageView);
+            //Glide.with(context).applyDefaultRequestOptions(requestOptions).load(thubo).into(blogImageView);
+            Glide.with(context).applyDefaultRequestOptions(requestOptions).load(downloaderUri).thumbnail(
+                    Glide.with(context).load(thubo)
+            ).into(blogImageView);
+
         }
 
         private void setupUser(String name, String image) {
@@ -296,14 +315,14 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             Glide.with(context).applyDefaultRequestOptions(requestOptions).load(image).into(userImage);
         }
 
-        //time
+        //Time post
         private void setTime(String plogDate) {
             date = mView.findViewById(R.id.plog_date);
             date.setText(plogDate);
 
         }
 
-        //like count
+        //Like count
         private void likeCount(int countLike) {
             like_count = mView.findViewById(R.id.blog_like_count);
             like_count.setText(countLike + " Likes");
@@ -316,13 +335,5 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         }
 
 
-        //@Override
-        /*public void onClick(View view) {
-            Toast.makeText(context,"here:  "+postID ,Toast.LENGTH_LONG).show();
-            //Intent intent = new Intent(context, UserAccount.class);
-            //intent.putExtra("postid",postID);
-            //context.startActivity(intent);
-        }
-        */
     }
 }

@@ -127,7 +127,7 @@ public class CommentsActivity extends AppCompatActivity {
 
                             } else {
 
-                                comment_field.setText("now");
+                                comment_field.setText(" ");
 
                             }
 
@@ -139,7 +139,9 @@ public class CommentsActivity extends AppCompatActivity {
                     Toast.makeText(CommentsActivity.this, "Write the Comment Please ", Toast.LENGTH_SHORT).show();
 
                 }
+
             }
+
         });
 
         //}else{
@@ -148,4 +150,5 @@ public class CommentsActivity extends AppCompatActivity {
         //}
 
     }
+
 }

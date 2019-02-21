@@ -11,19 +11,28 @@ public class BlogPost extends BlogpostID {
     public String image_uri;
     public String desc;
     public Date timeStamp;
+    public String image_thumb;
 
 
     public BlogPost() {
     }
 
 
-    public BlogPost(String user_id, String image_uri, String desc, Date timeStamp) {
+    public BlogPost(String user_id, String image_uri, String desc, Date timeStamp,String image_thumb) {
         this.userId = user_id;
         this.image_uri = image_uri;
         this.desc = desc;
         this.timeStamp = timeStamp;
+        this.image_thumb=image_thumb;
     }
 
+    public String getImage_thumb() {
+        return image_thumb;
+    }
+
+    public void setImage_thumb(String image_thumb) {
+        this.image_thumb = image_thumb;
+    }
 
     public String getUser_id() {
         return userId;

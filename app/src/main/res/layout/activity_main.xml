@@ -15,7 +15,9 @@
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></androidx.appcompat.widget.Toolbar>
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
@@ -31,16 +33,29 @@
         app:layout_constraintBottom_toBottomOf="@+id/main_Button_Nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:outlineSpotShadowColor="@color/colorPrimary"
+        android:background="?android:attr/listDivider"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/main_container" />
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/main_Button_Nav"
+
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_menu" />
+        app:menu="@menu/bottom_menu">
+
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+
 
     <FrameLayout
         android:id="@+id/main_container"
@@ -48,8 +63,10 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/main_Button_Nav"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_toolBar">
+        app:layout_constraintTop_toBottomOf="@+id/post_toolBar"
+        app:layout_constraintVertical_bias="1.0">
 
     </FrameLayout>
 

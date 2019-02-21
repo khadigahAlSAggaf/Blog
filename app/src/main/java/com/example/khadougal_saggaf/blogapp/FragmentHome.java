@@ -1,6 +1,7 @@
 package com.example.khadougal_saggaf.blogapp;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -41,7 +42,6 @@ public class FragmentHome extends Fragment {
     private RecyclerView post_list_view;
     private List<BlogPost> blog_list;
     private BlogRecyclerAdapter blogRecyclerAdapter;
-
     private boolean isFirstPageFirstLoad = true;
 
     public FragmentHome() {
@@ -86,27 +86,28 @@ public class FragmentHome extends Fragment {
             });
 
 
-            //.orderBy("timeStamp", Query.Direction.DESCENDING).limit(3)
-
             Query firstQuery = firebaseFirestore.collection("Posts").orderBy("timeStamp", Query.Direction.DESCENDING).limit(3);
 
             //snapshot help us to retrieve the data in realTime with order by last to old pots
             // call getActivity in fragment or this in activity while using addSnapshotListenter
             // to attach data to activity only if activity is launch and stop while not
-            firstQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+            firstQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
 
-                    if (isFirstPageFirstLoad) {
-                        // Get the last visible document
-                        lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                    if (queryDocumentSnapshots != null) {
+                        if (isFirstPageFirstLoad) {
+                            // Get the last visible document
+                            lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                        }
                     }
 
-                    if (e != null) {
+                    /*if (e != null) {
                         Log.d(TAG, "Error:" + e.getMessage());
                     } else {
-
-                        //for loop to check for document changes
+*/
+                    //for loop to check for document changes
+                    if (queryDocumentSnapshots != null) {
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
 
@@ -121,22 +122,44 @@ public class FragmentHome extends Fragment {
                                 } else {
 
                                     blog_list.add(0, blogPostFromDB);
-
                                 }
                                 blogRecyclerAdapter.notifyDataSetChanged(); //this to monitoring any change happen to list
                             }
                         }
+                    }/*else{
+                        Toast.makeText(getActivity(),"noo doc : "+blogRecyclerAdapter.getItemCount(),Toast.LENGTH_LONG).show();
 
                     }
+                    */
+                    // }//end else
                     isFirstPageFirstLoad = false;
                 }
 
             });
+            //Toast.makeText(getActivity(),"count post : "+blogRecyclerAdapter.getItemCount(),Toast.LENGTH_LONG).show();
+
         }
+
+
 
         // Inflate the layout for this fragment
         return view;
     }
+
+    @Override
+    public void onDetach() {
+        // this will make you scroll all the way down
+        isFirstPageFirstLoad = true;
+        super.onDetach();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        // this will rearrange them in desending order
+        isFirstPageFirstLoad = true;
+        super.onAttach(context);
+    }
+
 
     public void loadMorePage() {
 
@@ -146,31 +169,38 @@ public class FragmentHome extends Fragment {
                 .limit(3);
 
         //snapshot help us to retrieve the data in realTime with order by last to old pots
-        firstQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+        firstQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
 
             @Override
             public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots != null) {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // Get the last visible document
+                        lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    // Get the last visible document
-                    lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                        //for loop to check for document changes
+                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-                    //for loop to check for document changes
-                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                                String BlogpostID = doc.getDocument().getId();
 
-                            String BlogpostID = doc.getDocument().getId();
+                                BlogPost blogPostFromDB = doc.getDocument().toObject(BlogPost.class).withID(BlogpostID);
+                                blog_list.add(blogPostFromDB);
 
-                            BlogPost blogPostFromDB = doc.getDocument().toObject(BlogPost.class).withID(BlogpostID);
-                            blog_list.add(blogPostFromDB);
-
-                            blogRecyclerAdapter.notifyDataSetChanged(); //this to monitoring any change happen to list
+                                blogRecyclerAdapter.notifyDataSetChanged(); //this to monitoring any change happen to list
+                            }
                         }
-                    }
-                } //else {
-                  //  Log.d(TAG, "Error Message Found ****************:" + e.getMessage());
-                //}
+                    }/*else{
+                        Toast.makeText(getActivity(),"no doc 2 "+blogRecyclerAdapter.getItemCount(),Toast.LENGTH_LONG).show();
+
+                    }*/
+                }/*else{
+                    Toast.makeText(getActivity(),"no doc 3 "+blogRecyclerAdapter.getItemCount(),Toast.LENGTH_LONG).show();
+
+                }
+                */
+
             }
 
         });

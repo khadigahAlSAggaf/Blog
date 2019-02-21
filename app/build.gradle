@@ -33,9 +33,9 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.google.firebase:firebase-database:16.0.5'
+    implementation 'com.google.firebase:firebase-database:16.0.6'
     implementation 'com.google.firebase:firebase-storage:16.0.5'
-    implementation 'com.google.firebase:firebase-firestore:17.1.5'
+    implementation 'com.google.firebase:firebase-firestore:18.0.0'
 
 
     implementation 'de.hdodenhof:circleimageview:2.2.0' //circle
@@ -49,7 +49,8 @@ dependencies {
     //glide library to restore image from storage DB
     implementation 'com.google.android.material:material:1.0.0'
 
-    implementation 'id.zelory:compressor:2.1.0' // imgae compressor
+    implementation 'id.zelory:compressor:2.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0-rc02'// imgae compressor
 
 
 }

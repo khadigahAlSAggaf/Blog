@@ -62,6 +62,7 @@ public class newPostActivity extends AppCompatActivity {
     //File Compressed
     private Bitmap compressedImageFile;
 
+    private String randoKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +113,7 @@ public class newPostActivity extends AppCompatActivity {
                 if (!TextUtils.isEmpty(newPost) && post_image_uri != null) {
                     new_post_progressBar.setVisibility(View.VISIBLE);
 
-                    String randoKey = UUID.randomUUID().toString();
+                    randoKey = UUID.randomUUID().toString();
 
 
                     byte[] imageData = CompressPhoto(image_new_post); // call compressed method
@@ -131,7 +132,7 @@ public class newPostActivity extends AppCompatActivity {
                                 throw task.getException();
                             }
 
-                            // Continue with the task to get the download URL
+                            //Continue with the task to get the download URL
                             //this work to get the URI that reserve at firestore for specific image
                             return filePath.getDownloadUrl();
                         }
@@ -150,6 +151,11 @@ public class newPostActivity extends AppCompatActivity {
                         }
                     });
 
+                }else if(post_image_uri == null){
+                    Toast.makeText(newPostActivity.this, "Please Upload an Image", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(newPostActivity.this, "Please Fill the Post", Toast.LENGTH_LONG).show();
+
                 }
 
             }
@@ -165,9 +171,49 @@ public class newPostActivity extends AppCompatActivity {
      * */
     private void storeFirestore(@NonNull Task<Uri> task, String newPost) {
 
-        Uri downloadUri = task.getResult();
+        final Uri downloadUri = task.getResult();
+        final String newpost=newPost;
+        //
+        File newThumbFile = new File(post_image_uri.getPath());
+        try {
 
-        Map<String, Object> postMap = new HashMap<>();
+            compressedImageFile = new Compressor(newPostActivity.this)
+                    .setMaxHeight(100)
+                    .setMaxWidth(100)
+                    .setQuality(1)
+                    .compressToBitmap(newThumbFile);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] thumbData = baos.toByteArray();
+
+        final StorageReference filePath = storageReference.child("post_image/thumbs")
+                .child(randoKey + ".jpg");
+
+        UploadTask uploadTask=filePath.putBytes(thumbData);
+        Task<Uri> urlTask=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                //Continue with the task to get the download URL
+                //this work to get the URI that reserve at firestore for specific image
+                return filePath.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+             othermethod(task,newpost, downloadUri);
+            }
+        });
+
+     /*   Map<String, Object> postMap = new HashMap<>();
         postMap.put("image_uri", downloadUri.toString());
         postMap.put("desc", newPost);
         postMap.put("userId", userID);
@@ -177,7 +223,7 @@ public class newPostActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentReference> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(newPostActivity.this, "Yessssss, Post Added Successfully", Toast.LENGTH_LONG).show();
+                    Toast.makeText(newPostActivity.this, "Post Added Successfully", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(newPostActivity.this, MainActivity.class));
 
                 } else {
@@ -186,9 +232,38 @@ public class newPostActivity extends AppCompatActivity {
                 }
             }
         });
+        */
 
         new_post_progressBar.setVisibility(View.INVISIBLE);
 
+    }
+
+    private void othermethod(Task<Uri> task, String newpostc, Uri downloadUri) {
+
+        Uri downloadthumbUri = task.getResult();
+        String newPost=newpostc;
+
+        Map<String, Object> postMap = new HashMap<>();
+        postMap.put("image_uri", downloadUri.toString());
+        postMap.put("image_thumb", downloadthumbUri.toString());
+
+        postMap.put("desc", newPost);
+        postMap.put("userId", userID);
+        postMap.put("timeStamp", FieldValue.serverTimestamp());
+
+        firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(newPostActivity.this, "Post Added Successfully", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(newPostActivity.this, MainActivity.class));
+
+                } else {
+                    Toast.makeText(newPostActivity.this, "Post Doesn't Uploaded", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
     }
 
 
@@ -223,9 +298,9 @@ public class newPostActivity extends AppCompatActivity {
         try {
 
             compressedImageFile = new Compressor(newPostActivity.this)
-                    .setMaxHeight(100)
-                    .setMaxWidth(100)
-                    .setQuality(1)
+                    .setMaxHeight(720)
+                    .setMaxWidth(720)
+                    .setQuality(50)
                     .compressToBitmap(newImageFile);
 
         } catch (IOException e) {

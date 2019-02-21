@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-        replaceFragment(fragmentHome);
+        // Display the Home in first
+        //replaceFragment(fragmentHome);
+        initializeFragment();
 
         //onClick floatingPoint Button
         addPost = findViewById(R.id.floatingActionButton);
@@ -75,13 +78,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Bottom_Main_Nav = findViewById(R.id.main_Button_Nav);
+
         Bottom_Main_Nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
+                Fragment currentFragment=getSupportFragmentManager().findFragmentById(R.id.main_container);
                 switch (menuItem.getItemId()) {
                     case R.id.nav_home:
-                        replaceFragment(fragmentHome);
+                        replaceFragment(fragmentHome,currentFragment);
                         return true;
 
                     /*case R.id.nav_notivication:
@@ -91,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
                         return true;*/
 
                     case R.id.nav_account:
-                        //replaceFragment(fragmentAccount);
-                        startActivity(new Intent(MainActivity.this,otherPage.class));
+                        replaceFragment(fragmentNotivication,currentFragment);
+                        //startActivity(new Intent(MainActivity.this,otherPage.class));
 
                         return true;
 
@@ -150,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
      * but if it logOut it display register/LogIn page.
      *
      * and if the user already logIn, but doesn't configure setup image and name, the app open direct to setup page.
-     * how to sheck the setup is done or no?
+     * how to check the setup is done or no?
      * it's connected to the document of this user, and check if it's data -image & name- found or not,
      * so if it's found then continue to home page, but if doesn't exist so, the setup page display.
      * */
@@ -180,12 +184,55 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void replaceFragment(Fragment fragment) {
+    private void replaceFragment(Fragment fragment,Fragment currentFragment) {
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_container, fragment);
-        //fragmentTransaction.commitAllowingStateLoss();
+
+        if(fragment == fragmentHome){
+
+            //fragmentTransaction.hide(fragmentAccount);
+            fragmentTransaction.hide(fragmentNotivication);
+
+        }
+
+        /*if(fragment == fragmentAccount){
+
+            fragmentTransaction.hide(fragmentHome);
+            fragmentTransaction.hide(fragmentNotivication);
+
+        }
+        */
+
+        if(fragment == fragmentNotivication){
+
+            fragmentTransaction.hide(fragmentHome);
+            //fragmentTransaction.hide(fragmentAccount);
+
+        }
+        fragmentTransaction.show(fragment);
+
+        //fragmentTransaction.replace(R.id.main_container, fragment);
+        fragmentTransaction.commit();
+
+        /*fragmentTransaction.replace(R.id.main_container, fragment);
+        fragmentTransaction.commit();*/
+
+    }
+
+    private void initializeFragment(){
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        fragmentTransaction.add(R.id.main_container, fragmentHome);
+        fragmentTransaction.add(R.id.main_container, fragmentNotivication);
+        //fragmentTransaction.add(R.id.main_container, accountFragment);
+
+        fragmentTransaction.hide(fragmentNotivication);
+        //fragmentTransaction.hide(accountFragment);
+
         fragmentTransaction.commit();
 
     }
+
+
 }
