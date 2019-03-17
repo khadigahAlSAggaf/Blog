@@ -151,9 +151,9 @@ public class newPostActivity extends AppCompatActivity {
                         }
                     });
 
-                }else if(post_image_uri == null){
+                } else if (post_image_uri == null) {
                     Toast.makeText(newPostActivity.this, "Please Upload an Image", Toast.LENGTH_LONG).show();
-                }else{
+                } else {
                     Toast.makeText(newPostActivity.this, "Please Fill the Post", Toast.LENGTH_LONG).show();
 
                 }
@@ -172,7 +172,7 @@ public class newPostActivity extends AppCompatActivity {
     private void storeFirestore(@NonNull Task<Uri> task, String newPost) {
 
         final Uri downloadUri = task.getResult();
-        final String newpost=newPost;
+        final String newpost = newPost;
         //
         File newThumbFile = new File(post_image_uri.getPath());
         try {
@@ -194,8 +194,8 @@ public class newPostActivity extends AppCompatActivity {
         final StorageReference filePath = storageReference.child("post_image/thumbs")
                 .child(randoKey + ".jpg");
 
-        UploadTask uploadTask=filePath.putBytes(thumbData);
-        Task<Uri> urlTask=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+        UploadTask uploadTask = filePath.putBytes(thumbData);
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
@@ -209,7 +209,7 @@ public class newPostActivity extends AppCompatActivity {
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-             othermethod(task,newpost, downloadUri);
+                othermethod(task, newpost, downloadUri);
             }
         });
 
@@ -241,7 +241,7 @@ public class newPostActivity extends AppCompatActivity {
     private void othermethod(Task<Uri> task, String newpostc, Uri downloadUri) {
 
         Uri downloadthumbUri = task.getResult();
-        String newPost=newpostc;
+        String newPost = newpostc;
 
         Map<String, Object> postMap = new HashMap<>();
         postMap.put("image_uri", downloadUri.toString());
@@ -260,7 +260,6 @@ public class newPostActivity extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(newPostActivity.this, "Post Doesn't Uploaded", Toast.LENGTH_LONG).show();
-
                 }
             }
         });

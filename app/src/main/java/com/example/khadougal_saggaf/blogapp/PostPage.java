@@ -76,7 +76,7 @@ public class PostPage extends AppCompatActivity {
         postImage = findViewById(R.id.postView_image_post);
 
         btn_blog_like = findViewById(R.id.imageView);
-        comment=findViewById(R.id.imageView2);
+        comment = findViewById(R.id.imageView2);
 
         //Intent Extras
         post_id = getIntent().getExtras().getString("post_id");

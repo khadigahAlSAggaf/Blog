@@ -8,6 +8,11 @@
         android:title="@string/action_searchS"
         app:showAsAction="always" />
     <item
+        android:id="@+id/action_notification_btn"
+        android:icon="@drawable/notifications_black_24dp"
+        android:title="@string/action_searchS"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_setting_btn"
         android:title="@string/Action_Settings" />
     <item

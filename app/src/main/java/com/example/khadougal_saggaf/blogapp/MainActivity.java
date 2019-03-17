@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private FragmentHome fragmentHome;
     private FragmentNotivication fragmentNotivication;
     private FragmentAccount fragmentAccount;
+    private FragmentSearch fragmentSearch;
+    private Fragment currentFragment;
 
 
     private String Current_userID;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentHome = new FragmentHome();
         fragmentAccount = new FragmentAccount();
         fragmentNotivication = new FragmentNotivication();
+        fragmentSearch=new FragmentSearch();
 
         //Firebase Instance
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -82,28 +85,21 @@ public class MainActivity extends AppCompatActivity {
         Bottom_Main_Nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment currentFragment=getSupportFragmentManager().findFragmentById(R.id.main_container);
+                 currentFragment=getSupportFragmentManager().findFragmentById(R.id.main_container);
                 switch (menuItem.getItemId()) {
                     case R.id.nav_home:
                         replaceFragment(fragmentHome,currentFragment);
                         return true;
 
-                    /*case R.id.nav_notivication:
-                        //replaceFragment(fragmentNotivication);
-                        startActivity(new Intent(MainActivity.this,otherPage.class));
-
-                        return true;*/
 
                     case R.id.nav_account:
                         replaceFragment(fragmentNotivication,currentFragment);
                         //startActivity(new Intent(MainActivity.this,otherPage.class));
-
                         return true;
 
                     default:
                         return false;
                 }
-
             }
         });
 
@@ -136,6 +132,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_setting_btn:
                 startActivity(new Intent(MainActivity.this, UserAccount.class));
                 return true;
+
+            case R.id.action_search_btn:
+                //move into search fragment
+                replaceFragment(fragmentSearch,currentFragment);
+                return true;
+
 
             default:
                 return false;
@@ -192,30 +194,24 @@ public class MainActivity extends AppCompatActivity {
 
             //fragmentTransaction.hide(fragmentAccount);
             fragmentTransaction.hide(fragmentNotivication);
-
+            fragmentTransaction.hide(fragmentSearch);
         }
-
-        /*if(fragment == fragmentAccount){
-
-            fragmentTransaction.hide(fragmentHome);
-            fragmentTransaction.hide(fragmentNotivication);
-
-        }
-        */
 
         if(fragment == fragmentNotivication){
-
             fragmentTransaction.hide(fragmentHome);
+            fragmentTransaction.hide(fragmentSearch);
             //fragmentTransaction.hide(fragmentAccount);
 
         }
+        if(fragment==fragmentSearch){
+            fragmentTransaction.hide(fragmentHome);
+            fragmentTransaction.hide(fragmentNotivication);
+        }
+
         fragmentTransaction.show(fragment);
 
         //fragmentTransaction.replace(R.id.main_container, fragment);
         fragmentTransaction.commit();
-
-        /*fragmentTransaction.replace(R.id.main_container, fragment);
-        fragmentTransaction.commit();*/
 
     }
 
@@ -225,14 +221,15 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentTransaction.add(R.id.main_container, fragmentHome);
         fragmentTransaction.add(R.id.main_container, fragmentNotivication);
+        fragmentTransaction.add(R.id.main_container,fragmentSearch);
         //fragmentTransaction.add(R.id.main_container, accountFragment);
 
         fragmentTransaction.hide(fragmentNotivication);
+        fragmentTransaction.hide(fragmentSearch);
         //fragmentTransaction.hide(accountFragment);
 
         fragmentTransaction.commit();
 
     }
-
 
 }
